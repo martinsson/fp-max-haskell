@@ -1,6 +1,24 @@
 module Lib
-    ( someFunc
+    ( sayHello, ConsoleIO(..), TestIO(..)
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Prelude hiding (putStrLn)
+import qualified Prelude as P
+
+data TestIO a = PutStrLn String 
+ deriving (Show, Eq)
+
+instance ConsoleIO TestIO where
+    putStrLn = PutStrLn
+
+class ConsoleIO m  e
+    putStrLn :: String -> m ()
+
+
+sayHello :: (Monad m, ConsoleIO m) => m ()
+sayHello = do
+    putStrLn "Hello"
+    putStrLn "World"
+
+instance ConsoleIO IO where
+    putStrLn = P.putStrLn
